@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("MYSQL_DATABASE_URL")
+}
+
+model Vendor {
+  id                 String       @id @default(uuid())
+  firstName          String
+  lastName           String
+  email_verification Boolean   @default(false)
+  email              String?    @unique
+  phone              String
+  password           String
+  inviteCode         String
+  referralCode       String?
+  status             Boolean   @default(true)
+
+  // Fields for Google authentication
+  googleId           String?
+  googleAccessToken  String?
+
+  // Fields for Facebook authentication
+  facebookId         String?
+  facebookAccessToken String?
+
+  // Fields for Apple authentication
+  appleId            String?
+  appleIdentityToken String?
+
+  
+  deletedAt          DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@map("vendors")
+}
+
+model VerifyOTP {
+  email     String   @id
+  otp       Int
+  createdAt DateTime @default(now())
+
+  @@map("verify_otps")
+}
+
+model ResetToken {
+  email     String   @id
+  token     String
+  createdAt DateTime @default(now())
+
+  @@map("reset_tokens")
+}
